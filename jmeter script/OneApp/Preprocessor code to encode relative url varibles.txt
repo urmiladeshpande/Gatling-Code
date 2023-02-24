@@ -1,0 +1,26 @@
+import javax.crypto.Mac;
+import javax.crypto.spec.SecretKeySpec;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
+import java.util.Formatter;
+import org.apache.commons.codec.binary.Hex;
+
+String secret = '3M8WwyxwsLoqSR89JoXnglyVguxRsgIR';
+String drmType = 'playready';
+String now = new Date().getTime().toString();
+String secretValue = now + drmType;
+//log.info("**** SECRETVALUE ****" + secretValue);
+
+Mac mac = Mac.getInstance("HmacSHA256");
+SecretKeySpec secretKeySpec = new SecretKeySpec(secret.getBytes(), "HmacSHA256");
+mac.init(secretKeySpec);
+byte[] digest = mac.doFinal(secretValue.getBytes());
+String hash = digest.encodeHex().toString();
+
+//log.info("**** Hash ****" + hash);
+
+vars.put("drmType",drmType);
+vars.put("timestamp",now);
+vars.put("hash",hash);

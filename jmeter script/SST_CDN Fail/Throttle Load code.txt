@@ -1,0 +1,55 @@
+package Helper1
+
+import io.gatling.core.Predef.{Simulation, nothingFor, _}
+import io.gatling.core.structure.ScenarioBuilder
+import io.gatling.http.Predef._
+import io.gatling.jdbc.Predef._
+
+import scala.concurrent.duration._
+
+class throttleLoad{
+
+  def loadThrottle(scn: ScenarioBuilder) = {
+    scn.inject(
+      // generate an open workload injection profile
+      // with levels of 10, 20, 30 etc. user adding every 10 second
+      // each level lasting 10 seconds
+      // separated by linear ramps lasting 10 seconds
+      incrementConcurrentUsers(10)    //10 user to be added
+        .times(10)               //for 1 hours=3600 seconds/10 seconds
+        .eachLevelLasting(10)   // waiting for 10 seconds before ramping up
+        .separatedByRampsLasting(180)  // ramp up done in 10 seconds
+        .startingFrom(0) // Initial user to start with
+
+
+//      for(w <- 0 to 720)
+//        {
+         // rampUsers(10).during(10.seconds)
+          //rampUsersPerSec(10*w).to(10*(w+1)).during(10.seconds)
+//        }
+
+//      nothingFor(5.seconds),
+//      rampUsers(10).during(30.seconds),
+//      nothingFor(5.seconds),
+//      rampUsers(10).during(30.seconds),
+//      nothingFor (5.seconds),
+//      rampUsers(10).during(30.seconds),
+//      nothingFor(5.seconds),
+//      rampUsers(10).during(30.seconds),
+//      nothingFor(5.seconds),
+//      rampUsers(10).during(30.seconds),
+//      nothingFor(5.seconds),
+//      rampUsers(10).during(30.seconds),
+//      nothingFor(35.seconds),
+//      rampUsers(10).during(30.seconds)
+
+    )
+    //     scn.inject(rampUsers(20).during(30.seconds)).throttle(holdFor(7200))
+    //     scn.inject(nothingFor(600.seconds),rampUsers(10).during(30.seconds)).throttle(holdFor(6600))
+  }
+}
+
+//
+object throttleLoad {
+
+}

@@ -1,0 +1,41 @@
+subtitle	en-US	false	text/plain	true
+
+audio	en-US	false	text/plain	true
+
+forcedNarrative	false	false	text/plain	true
+
+
+package com.gatling.tests
+
+import io.gatling.core.Predef.Simulation
+import scala.concurrent.duration._
+
+import io.gatling.core.Predef._
+import io.gatling.http.Predef._
+import io.gatling.jdbc.Predef._
+import scala.util.Using
+import scala.io
+
+class SST_CDN_LimeLight_BE extends Simulation {
+
+  val httpProtocol = http .baseUrl(url= "https://g003-vod-eu-cmaf-prd-ll.pcdn01.cssott.com")
+
+  val csvFeeder = csv(fileName = "src/test/scala/param_list_paths.csv").random
+
+  feed(csvFeeder)
+
+  val scn1 = scenario(scenarioName="LimeLight_BE")
+    .exec(
+      http(requestName= "LimeLight_BE req")
+
+        .get("${path}")
+        .queryParam("subtitle", "en-US")
+        .queryParam("audio", "en-US")
+        .queryParam("forcedNarrative", "false")
+        .check(
+          status is 200,
+          header("X-Served-By").is("mm-eu-west-1")
+        )
+    )
+  setUp(scn1.inject(atOnceUsers(1))).protocols(httpProtocol)
+}
